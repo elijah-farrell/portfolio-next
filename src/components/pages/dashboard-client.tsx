@@ -10,13 +10,13 @@ import {
   Zap,
   Server,
   Code2,
+  Trophy,
 } from "lucide-react";
 import { SiValorant, SiLeagueoflegends } from "react-icons/si";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { HackerText } from "@/components/ui/hacker-text";
 import { MagneticWrapper } from "@/components/ui/magnetic-wrapper";
-// 👇 CHANGED: Import the server action for polling
 import {
   fetchDashboardData,
   type DashboardData,
@@ -46,7 +46,6 @@ const getHeatmapColor = (level: number) => {
 };
 
 function LoadGraph({ data }: { data?: number[] }) {
-  // 👇 ADDED: 'value' property for tooltips
   const [normalizedBars, setNormalizedBars] = useState<
     { height: number; delay: number; value: number }[]
   >([]);
@@ -58,7 +57,7 @@ function LoadGraph({ data }: { data?: number[] }) {
         const bars = data.slice(-24).map((val, i) => ({
           height: Math.max(10, Math.min((val / maxLoad) * 100, 100)),
           delay: i * 0.05,
-          value: val, // Store real value
+          value: val,
         }));
         setNormalizedBars(bars);
       } else {
@@ -78,7 +77,6 @@ function LoadGraph({ data }: { data?: number[] }) {
       {normalizedBars.map((bar, i) => (
         <div
           key={i}
-          // 👇 ADDED: Tooltip for hover
           title={`Load: ${bar.value.toFixed(2)}`}
           className="flex-1 bg-cyan-500/40 rounded-t-[1px] relative overflow-hidden group cursor-crosshair transition-all hover:bg-cyan-400/60"
           style={{
@@ -188,6 +186,9 @@ function DashboardCard({
     },
   }[color];
 
+  // Generate a unique ID for the noise filter to avoid duplicate ID conflicts
+  const noiseId = `noise-${title.replace(/\s+/g, "-").toLowerCase()}`;
+
   return (
     <MagneticWrapper strength={0.05} className="dashboard-card h-full">
       <div
@@ -203,7 +204,21 @@ function DashboardCard({
             theme.glow,
           )}
         />
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('/noise.svg')] bg-repeat mix-blend-overlay" />
+
+        {/* Updated Noise Implementation */}
+        <div className="absolute inset-0 z-0 opacity-20 pointer-events-none mix-blend-overlay">
+          <svg className="h-full w-full opacity-50">
+            <filter id={noiseId}>
+              <feTurbulence
+                type="fractalNoise"
+                baseFrequency="0.8"
+                numOctaves="3"
+                stitchTiles="stitch"
+              />
+            </filter>
+            <rect width="100%" height="100%" filter={`url(#${noiseId})`} />
+          </svg>
+        </div>
 
         <div className="relative z-10 flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
@@ -320,7 +335,6 @@ export function DashboardMetrics({
   initialData: DashboardData;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  // 👇 CHANGED: Store data in state to allow updates
   const [data, setData] = useState<DashboardData>(initialData);
   const [latency, setLatency] = useState<number>(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -336,7 +350,6 @@ export function DashboardMetrics({
     { scope: containerRef },
   );
 
-  // 👇 ADDED: Polling Logic (Every 30 seconds)
   useEffect(() => {
     const interval = setInterval(async () => {
       setIsRefreshing(true);
@@ -348,12 +361,11 @@ export function DashboardMetrics({
       } finally {
         setTimeout(() => setIsRefreshing(false), 1000);
       }
-    }, 30000); // 30 seconds
+    }, 30000);
 
     return () => clearInterval(interval);
   }, []);
 
-  // Latency Check (Kept Separate for faster ping)
   useEffect(() => {
     const checkLatency = async () => {
       const start = performance.now();
@@ -436,7 +448,6 @@ export function DashboardMetrics({
                 REALTIME_LOAD
               </span>
               <div className="flex items-center gap-2">
-                {/* Tiny indicator when refreshing */}
                 <span
                   className={cn(
                     "h-1.5 w-1.5 rounded-full bg-cyan-500 transition-opacity",
@@ -555,9 +566,17 @@ export function DashboardMetrics({
                   VALORANT
                 </span>
               </div>
-              <span className="text-[10px] font-mono text-red-400 bg-red-500/10 px-1.5 py-0.5 rounded border border-red-500/20">
-                {data.gaming.valorant.rank.toUpperCase()}
-              </span>
+              <div className="flex flex-col items-end">
+                <span className="text-[10px] font-mono text-red-400 bg-red-500/10 px-1.5 py-0.5 rounded border border-red-500/20">
+                  {data.gaming.valorant.rank.toUpperCase()}
+                </span>
+                {data.gaming.valorant.peakRank !== "Unranked" && (
+                  <div className="flex items-center gap-1 mt-1 text-[9px] text-muted-foreground/50">
+                    <Trophy className="h-2.5 w-2.5" />
+                    <span>PEAK: {data.gaming.valorant.peakRank}</span>
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="bg-linear-to-br from-red-500/5 to-transparent p-3 rounded-lg border border-red-500/10 hover:border-red-500/30 transition-colors">
@@ -602,9 +621,17 @@ export function DashboardMetrics({
                 <SiLeagueoflegends className="h-3.5 w-3.5 text-blue-500" />
                 <span className="text-xs font-bold tracking-wide">LEAGUE</span>
               </div>
-              <span className="text-[10px] font-mono text-blue-400 bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20">
-                {data.gaming.lol.rank}
-              </span>
+              <div className="flex flex-col items-end">
+                <span className="text-[10px] font-mono text-blue-400 bg-blue-500/10 px-1.5 py-0.5 rounded border border-blue-500/20">
+                  {data.gaming.lol.rank}
+                </span>
+                {data.gaming.lol.peakRank !== "Unranked" && (
+                  <div className="flex items-center gap-1 mt-1 text-[9px] text-muted-foreground/50">
+                    <Trophy className="h-2.5 w-2.5" />
+                    <span>PEAK: {data.gaming.lol.peakRank}</span>
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="bg-linear-to-br from-blue-500/5 to-transparent p-3 rounded-lg border border-blue-500/10 hover:border-blue-500/30 transition-colors">

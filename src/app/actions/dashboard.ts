@@ -29,6 +29,7 @@ export interface DashboardData {
   gaming: {
     valorant: {
       rank: string;
+      peakRank: string; // [!code ++]
       rr: number;
       winRate: number;
       matches: number;
@@ -38,6 +39,7 @@ export interface DashboardData {
     };
     lol: {
       rank: string;
+      peakRank: string; // [!code ++]
       lp: number;
       winRate: number;
       matches: number;
@@ -66,7 +68,6 @@ export interface DashboardData {
 }
 
 // --- HELPER: Redis Fallback Wrapper ---
-// Tries to fetch fresh data. If it fails, tries to get last cached version from Redis.
 async function fetchWithFallback<T>(
   key: string,
   fetcher: () => Promise<T>,
@@ -74,7 +75,6 @@ async function fetchWithFallback<T>(
 ): Promise<T> {
   try {
     const data = await fetcher();
-    // Save successful fetch to Redis (expire in 24h to keep it somewhat fresh)
     await redis.set(key, JSON.stringify(data), { ex: 86400 });
     return data;
   } catch (error) {
@@ -214,6 +214,7 @@ async function getValorantStats() {
 
   const fallback = {
     rank: "Unranked",
+    peakRank: "Unranked",
     rr: 0,
     winRate: 0,
     matches: 0,
@@ -250,7 +251,11 @@ async function getValorantStats() {
       ),
     ]);
 
-    const mmrData = mmrRes.ok ? (await mmrRes.json()).data?.current_data : null;
+    // Handle HenrikDev V2 Response Structure
+    const mmrJson = mmrRes.ok ? await mmrRes.json() : null;
+    const currentData = mmrJson?.data?.current_data || null;
+    const highestRank = mmrJson?.data?.highest_rank || null;
+
     const matchesData = matchesRes.ok ? (await matchesRes.json()).data : [];
 
     let totalKills = 0,
@@ -295,8 +300,9 @@ async function getValorantStats() {
       history.length > 0 ? Math.round((wins / history.length) * 100) : 0;
 
     return {
-      rank: mmrData?.currenttierpatched || "Unranked",
-      rr: mmrData?.ranking_in_tier || 0,
+      rank: currentData?.currenttierpatched || "Unranked",
+      peakRank: highestRank?.patched_tier || "Unranked",
+      rr: currentData?.ranking_in_tier || 0,
       winRate: realWinRate,
       matches: history.length,
       kd: realKD,
@@ -308,7 +314,6 @@ async function getValorantStats() {
   return fetchWithFallback("dashboard:valorant", fetcher, fallback);
 }
 
-// ✅ Improved Region Mapper
 function getRiotMatchRegion(regionUrl: string): string {
   if (
     regionUrl.includes("na1") ||
@@ -323,7 +328,7 @@ function getRiotMatchRegion(regionUrl: string): string {
     regionUrl.includes("ph")
   )
     return "sea";
-  return "europe"; // Default to europe for euw1, eune1, tr1, ru, etc.
+  return "europe";
 }
 
 async function getLoLStats() {
@@ -331,8 +336,12 @@ async function getLoLStats() {
   cacheLife("minutes");
   cacheTag("dashboard-lol", "dashboard", "gaming");
 
+  // Read PEAK RANK from Env
+  const PEAK_RANK_ENV = process.env.RIOT_LOL_PEAK_RANK;
+
   const fallback = {
     rank: "Unranked",
+    peakRank: PEAK_RANK_ENV || "Unranked",
     lp: 0,
     winRate: 0,
     matches: 0,
@@ -424,9 +433,11 @@ async function getLoLStats() {
     const wins = soloQ.wins;
     const losses = soloQ.losses;
     const winRate = Math.round((wins / (wins + losses)) * 100);
+    const rankStr = `${soloQ.tier} ${soloQ.rank}`;
 
     return {
-      rank: `${soloQ.tier} ${soloQ.rank}`,
+      rank: rankStr,
+      peakRank: PEAK_RANK_ENV || rankStr,
       lp: soloQ.leaguePoints,
       winRate,
       matches: wins + losses,
@@ -439,7 +450,6 @@ async function getLoLStats() {
   return fetchWithFallback("dashboard:lol", fetcher, fallback);
 }
 
-// --- 3. SYSTEM STATS ---
 async function getSystemStats() {
   "use cache";
   cacheLife("seconds");
@@ -458,7 +468,7 @@ async function getSystemStats() {
       memory: { total: 4096, used: 2048, percent: 50 },
       os: "Ubuntu 22.04",
       load: 0.5,
-      loadHistory: Array(24).fill(0.5) as number[], // ✅ Fix 2: Ensure number[] type
+      loadHistory: Array(24).fill(0.5) as number[],
     },
   };
 
@@ -476,7 +486,6 @@ async function getSystemStats() {
     const dropletJson = await dropletRes.json();
     const droplet = dropletJson.droplet;
 
-    // Explicitly typed variable to ensure matching union type
     let status: "operational" | "degraded" | "outage" = "outage";
     if (droplet.status === "active") status = "operational";
     else if (droplet.status === "new" || droplet.status === "off")
@@ -551,13 +560,12 @@ async function getSystemStats() {
   } catch (error) {
     return {
       ...fallback,
-      status: "outage" as const, // ✅ Fix 3: Force literal type for the catch block return
+      status: "outage" as const,
       specs: { ...fallback.specs, loadHistory: Array(24).fill(0) as number[] },
     };
   }
 }
 
-// --- MAIN AGGREGATOR ---
 export async function fetchDashboardData(): Promise<DashboardData> {
   const [github, codeStats, valorant, lol, system] = await Promise.all([
     getGitHubStats(),
