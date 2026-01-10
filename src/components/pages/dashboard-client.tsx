@@ -186,7 +186,6 @@ function DashboardCard({
     },
   }[color];
 
-  // Generate a unique ID for the noise filter to avoid duplicate ID conflicts
   const noiseId = `noise-${title.replace(/\s+/g, "-").toLowerCase()}`;
 
   return (
@@ -205,7 +204,6 @@ function DashboardCard({
           )}
         />
 
-        {/* Updated Noise Implementation */}
         <div className="absolute inset-0 z-0 opacity-20 pointer-events-none mix-blend-overlay">
           <svg className="h-full w-full opacity-50">
             <filter id={noiseId}>
@@ -286,7 +284,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   return (
     <main
       ref={containerRef}
-      className="relative flex min-h-dvh md:h-dvh w-full flex-col items-center pt-24 md:pt-40 pb-20 px-6 overflow-hidden"
+      // [!code ++] Updated Padding & Height: pt-20 md:pt-24 (was pt-24 md:pt-40), min-h-dvh (was md:h-dvh)
+      className="relative flex min-h-dvh w-full flex-col items-center pt-20 md:pt-24 pb-24 px-6 overflow-x-hidden"
     >
       <HudHeader
         title="LIVE_FEED"
@@ -301,7 +300,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         dotColor="bg-cyan-500"
       />
 
-      <div className="relative z-10 w-full max-w-6xl space-y-12 pt-24 md:pt-12">
+      {/* [!code ++] Updated Padding: pt-12 md:pt-8 (was pt-24 md:pt-12) */}
+      <div className="relative z-10 w-full max-w-6xl space-y-12 pt-12 md:pt-8">
         <div className="text-center space-y-4 floating-header">
           <h1 className="text-4xl md:text-6xl font-black tracking-tighter">
             <HackerText text="Command Center" />
@@ -653,11 +653,17 @@ export function DashboardMetrics({
                   </span>
                 </div>
               </div>
-              <MatchHistory
-                history={data.gaming.lol.lastMatches}
-                winRate={data.gaming.lol.winRate}
-                color="blue"
-              />
+              <div className="space-y-1">
+                <div className="flex justify-between text-[9px] text-blue-300/50 font-mono">
+                  <span>RECENT_MATCHES</span>
+                  <span>{data.gaming.lol.winRate}% WINRATE</span>
+                </div>
+                <MatchHistory
+                  history={data.gaming.lol.lastMatches}
+                  winRate={data.gaming.lol.winRate}
+                  color="blue"
+                />
+              </div>
             </div>
           </div>
         </div>
