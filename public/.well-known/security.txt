@@ -1,6 +1,6 @@
-Contact: mailto:contact@t7sen.com
+Contact: mailto:your-email@example.com
 Expires: 2028-01-01T00:00:00.000Z
 Preferred-Languages: en
-Canonical: https://t7sen.com/.well-known/security.txt
-Policy: https://github.com/t7sen/portfolio/blob/main/.github/SECURITY.md
-Hiring: https://t7sen.com/contact
+Canonical: https://your-domain.com/.well-known/security.txt
+Policy: https://github.com/your-username/portfolio/blob/main/.github/SECURITY.md
+Hiring: https://your-domain.com/contact

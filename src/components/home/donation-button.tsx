@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 export function DonationButton() {
   const [status, setStatus] = React.useState<"idle" | "hover" | "redirecting">(
-    "idle"
+    "idle",
   );
   const containerRef = React.useRef<HTMLDivElement>(null);
   const progressBarRef = React.useRef<HTMLDivElement>(null);
@@ -55,7 +55,8 @@ export function DonationButton() {
 
     // 2. Redirect after delay
     setTimeout(() => {
-      window.open("https://buymeacoffee.com/t7sen", "_blank");
+      // Set your own Buy Me a Coffee (or Ko-fi, etc.) URL if desired
+      window.open("https://buymeacoffee.com/your-username", "_blank");
       // Reset state after user leaves (in case they come back)
       setTimeout(() => setStatus("idle"), 1000);
     }, 2000); // 2 second delay for animation
@@ -74,7 +75,7 @@ export function DonationButton() {
         gsap.set(progressBarRef.current, { width: "0%" });
       }
     },
-    { dependencies: [status] }
+    { dependencies: [status] },
   );
 
   return (
@@ -98,7 +99,7 @@ export function DonationButton() {
           // 3D Lift Effect
           "hover:-translate-y-1 hover:shadow-[0_10px_40px_-10px_rgba(var(--primary),0.3)]",
           // Press Effect
-          "active:translate-y-0 active:scale-[0.98] active:shadow-none"
+          "active:translate-y-0 active:scale-[0.98] active:shadow-none",
         )}
       >
         {/* Animated Gradient Border Layer */}
@@ -134,7 +135,7 @@ export function DonationButton() {
                 "flex items-center justify-center w-10 h-10 rounded-lg border transition-all duration-300",
                 status === "redirecting"
                   ? "bg-purple-500 border-purple-500 text-white animate-pulse"
-                  : "bg-background border-border group-hover:border-purple-500/50 group-hover:text-purple-500"
+                  : "bg-background border-border group-hover:border-purple-500/50 group-hover:text-purple-500",
               )}
             >
               {status === "redirecting" ? (
@@ -151,7 +152,7 @@ export function DonationButton() {
                   "text-sm font-bold tracking-tight transition-colors",
                   status === "redirecting"
                     ? "text-purple-500"
-                    : "text-foreground"
+                    : "text-foreground",
                 )}
               >
                 {status === "redirecting" ? (

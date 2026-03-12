@@ -80,7 +80,7 @@ const nextConfig: NextConfig = {
 
 export default bundleAnalyzer(
   withSentryConfig(nextConfig, {
-    org: "t7sen-c0",
+    org: "elijah-farrell",
     project: "portfolio",
     silent: !process.env.CI,
     widenClientFileUpload: true,

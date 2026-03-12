@@ -4,7 +4,7 @@ import { contactSchema, newsletterSchema } from "./validators";
 describe("Validators", () => {
   describe("newsletterSchema", () => {
     it("accepts a valid email", () => {
-      const result = newsletterSchema.safeParse({ email: "cyber@t7sen.com" });
+      const result = newsletterSchema.safeParse({ email: "cyber@example.com" });
       expect(result.success).toBe(true);
     });
 
@@ -13,7 +13,7 @@ describe("Validators", () => {
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0].message).toBe(
-          "Please enter a valid email address."
+          "Please enter a valid email address.",
         );
       }
     });
@@ -23,7 +23,7 @@ describe("Validators", () => {
     it("validates a correct form", () => {
       const validData = {
         name: "T7SEN",
-        email: "hello@t7sen.com",
+        email: "hello@example.com",
         message: "I would like to hire you for a project.",
       };
       const result = contactSchema.safeParse(validData);
@@ -50,7 +50,7 @@ describe("Validators", () => {
       expect(result.success).toBe(false);
       // @ts-expect-error - we know it failed
       expect(result.error.issues[0].message).toContain(
-        "at least 10 characters"
+        "at least 10 characters",
       );
     });
   });

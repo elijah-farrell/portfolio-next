@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test.describe("Navigation & Smoke Tests", () => {
   test("should successfully load the home page", async ({ page }) => {
     await page.goto("/");
-    await expect(page).toHaveTitle(/t7sen/i);
+    await expect(page).toHaveTitle(/Elijah Farrell/i);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 

@@ -7,7 +7,7 @@ First off, thanks for taking the time to contribute to the codebase.
 ## 📡 Establishment of Connection
 
 1. **Fork the Repository:** Create your own copy of the system.
-2. **Clone:** `git clone https://github.com/t7sen/portfolio.git`
+2. **Clone:** `git clone https://github.com/your-username/portfolio.git`
 3. **Install Dependencies:** `npm install`
 4. **Environment:** Copy `.env.example` to `.env.local` and populate credentials.
 

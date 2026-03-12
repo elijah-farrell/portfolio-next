@@ -7,8 +7,6 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useSfx } from "@/hooks/use-sfx";
 import { sendGAEvent } from "@next/third-parties/google";
-// ✅ IMPORT ADDED
-import { useAchievements } from "@/hooks/use-achievements";
 
 import { Button } from "@/components/ui/button";
 
@@ -18,8 +16,6 @@ export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const { play } = useSfx();
-  // ✅ HOOK ADDED
-  const { unlock } = useAchievements();
 
   // Animation Lock to prevent flashing during rapid clicks
   const lockedRef = useRef(false);
@@ -75,10 +71,8 @@ export function ThemeToggle() {
       clickCountRef.current = 0;
     }, 2000);
 
-    // If 5 clicks happen rapidly
     if (clickCountRef.current >= 5) {
-      unlock("THEME_HACKER");
-      clickCountRef.current = 0; // Reset after unlock
+      clickCountRef.current = 0;
     }
 
     const isDark = theme === "dark";

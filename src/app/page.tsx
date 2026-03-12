@@ -2,9 +2,8 @@ import { HomeClient } from "@/components/pages/home-client";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "t7sen | Cyber Developer",
-  description:
-    "Welcome to the portfolio of t7sen, a passionate cyber developer.",
+  title: "Home",
+  description: "Welcome to Elijah Farrell's portfolio.",
 };
 
 export default function HomePage() {

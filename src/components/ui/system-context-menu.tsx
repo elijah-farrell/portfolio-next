@@ -18,7 +18,6 @@ import {
 import { useSfx } from "@/hooks/use-sfx";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { useAchievements } from "@/hooks/use-achievements";
 
 interface MenuPosition {
   x: number;
@@ -31,7 +30,6 @@ export function SystemContextMenu() {
   const [isVisible, setIsVisible] = useState(false);
   const [position, setPosition] = useState<MenuPosition>({ x: 0, y: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
-  const { unlock } = useAchievements();
 
   useEffect(() => {
     const handleContextMenu = (e: MouseEvent) => {
@@ -112,8 +110,8 @@ export function SystemContextMenu() {
         {/* ✅ NEW: App Shortcuts */}
         <ContextItem
           icon={Activity}
-          label="Diagnostics"
-          onClick={() => handleAction(() => router.push("/dashboard"))}
+          label="Experience"
+          onClick={() => handleAction(() => router.push("/experience"))}
         />
         <ContextItem
           icon={Send}
@@ -132,8 +130,8 @@ export function SystemContextMenu() {
               if (navigator.share) {
                 try {
                   await navigator.share({
-                    title: "T7SEN | Portfolio",
-                    text: "Check out this high-performance cyber portfolio.",
+                    title: "Elijah Farrell | Portfolio",
+                    text: "Check out Elijah Farrell's portfolio.",
                     url: window.location.href,
                   });
                 } catch (err) {
@@ -170,8 +168,7 @@ export function SystemContextMenu() {
           label="Inspect Source"
           onClick={() =>
             handleAction(() => {
-              unlock("SOURCE_HUNTER");
-              window.open("https://github.com/t7sen/portfolio", "_blank");
+              window.open("https://github.com", "_blank");
             })
           }
         />

@@ -7,7 +7,6 @@ import { gsap } from "gsap";
 
 import { Cursor } from "@/components/ui/cursor";
 import { Preloader } from "@/components/ui/preloader";
-import { CommandMenu } from "@/components/command-menu";
 import { Background } from "@/components/ui/background";
 import { AvatarImage } from "@/components/ui/avatar-image";
 import { Navbar } from "@/components/navbar";
@@ -110,7 +109,6 @@ export function GlobalAppWrapper({ children }: { children: React.ReactNode }) {
       <Background />
       <Preloader contentLoaded={assetsLoaded} />
       <SoundPrompter />
-      <CommandMenu />
       <Navbar />
       <TabManager />
 

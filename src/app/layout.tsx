@@ -6,14 +6,9 @@ import { GlobalAppWrapper } from "@/components/global-app-wrapper";
 import { JsonLd } from "@/components/seo/json-ld";
 import "./globals.css";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import { AdminProvider } from "@/providers/admin-provider";
 import { Toaster } from "sonner";
-import { CyberChat } from "@/components/cyber-chat";
 import { Footer } from "@/components/footer";
-import { RealtimeProvider } from "@/providers/realtime-provider";
 import { SystemContextMenu } from "@/components/ui/system-context-menu";
-import { AchievementsProvider } from "@/hooks/use-achievements";
-import { AchievementsManager } from "@/components/achievements-manager";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,36 +30,35 @@ export const metadata: Metadata = {
         : "http://localhost:3000"),
   ),
   title: {
-    default: "T7SEN | SEC_OPS // Frontend",
-    template: "%s | T7SEN",
+    default: "Elijah Farrell | Portfolio",
+    template: "%s | Elijah Farrell",
   },
   description:
-    "Software Architect and Developer specializing in high-performance web applications, scalable systems, and immersive digital experiences.",
+    "Software developer portfolio for Elijah Farrell featuring experience, projects, skills, and contact information.",
   keywords: [
-    "Software Architect",
-    "Full Stack Developer",
+    "Elijah Farrell",
+    "Software Developer",
+    "Computer Science",
     "Next.js",
     "React",
     "TypeScript",
     "Portfolio",
-    "Cyberpunk Design",
   ],
-  authors: [{ name: "T7SEN", url: "https://t7sen.com" }],
-  creator: "T7SEN",
+  authors: [{ name: "Elijah Farrell" }],
+  creator: "Elijah Farrell",
   openGraph: {
     type: "website",
     locale: "en_US",
-    title: "t7sen | Cyber Developer",
+    title: "Elijah Farrell | Portfolio",
     description:
-      "Crafting digital reality through code. Specialized in high-performance web graphics and scalable architecture.",
-    siteName: "T7SEN Portfolio",
+      "Personal portfolio highlighting Elijah Farrell's background, projects, and technical skills.",
+    siteName: "Elijah Farrell Portfolio",
   },
   twitter: {
     card: "summary_large_image",
-    title: "t7sen | Cyber Developer",
+    title: "Elijah Farrell | Portfolio",
     description:
-      "Crafting digital reality through code. Specialized in high-performance web graphics and scalable architecture.",
-    creator: "@T7ME_",
+      "Personal portfolio highlighting Elijah Farrell's background, projects, and technical skills.",
   },
   robots: {
     index: true,
@@ -89,38 +83,30 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans`}
       >
-        <RealtimeProvider>
-          <JsonLd />
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <SoundProvider>
-              <AchievementsProvider>
-                <SystemContextMenu />
-                <CyberChat />
-                <AchievementsManager />
-                <AdminProvider>
-                  <GlobalAppWrapper>
-                    <div className="flex min-h-screen flex-col">
-                      <main className="flex-1">
-                        {children}
-                        <div
-                          className="h-24 w-full block lg:hidden"
-                          aria-hidden="true"
-                        />
-                      </main>
-                      <Footer />
-                    </div>
-                  </GlobalAppWrapper>
-                  <Toaster position="top-center" richColors />
-                </AdminProvider>
-              </AchievementsProvider>
-            </SoundProvider>
-          </ThemeProvider>
-        </RealtimeProvider>
+        <JsonLd />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <SoundProvider>
+            <SystemContextMenu />
+            <GlobalAppWrapper>
+              <div className="flex min-h-screen flex-col">
+                <main className="flex-1">
+                  {children}
+                  <div
+                    className="h-24 w-full block lg:hidden"
+                    aria-hidden="true"
+                  />
+                </main>
+                <Footer />
+              </div>
+            </GlobalAppWrapper>
+            <Toaster position="top-center" richColors />
+          </SoundProvider>
+        </ThemeProvider>
       </body>
       {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID && (
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID} />

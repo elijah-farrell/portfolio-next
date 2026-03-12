@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import { usePathname } from "next/navigation";
 import { AlertTriangle, Bug, ServerCrash } from "lucide-react";
 import { gsap } from "gsap";
@@ -11,24 +11,14 @@ import { Button } from "@/components/ui/button";
 import { useSfx } from "@/hooks/use-sfx";
 import { HackerText } from "@/components/ui/hacker-text";
 import { MagneticWrapper } from "@/components/ui/magnetic-wrapper";
-import { useAchievements } from "@/hooks/use-achievements";
 import { HudHeader } from "@/components/ui/hud-header";
 
 gsap.registerPlugin(useGSAP);
 
 export default function NotFound() {
   const { play } = useSfx();
-  const { unlock } = useAchievements();
   const containerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-
-  // Logic: Unlock achievement with stability delay
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      unlock("VOID_WALKER");
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [unlock]);
 
   useGSAP(
     () => {
@@ -155,7 +145,7 @@ export default function NotFound() {
               className="w-full sm:w-auto min-w-60 gap-3 border border-red-500/50 bg-red-500/10 text-red-500 font-mono font-bold shadow-[0_0_15px_rgba(220,38,38,0.2)] hover:bg-red-500 hover:text-white hover:border-red-500 hover:shadow-[0_0_30px_rgba(220,38,38,0.6)] transition-all duration-300"
               onClick={() => {
                 play("click");
-                window.location.href = `mailto:contact@t7sen.com?subject=System Anomaly Report (404)&body=Path attempted: ${pathname}`;
+                window.location.href = `mailto:farrellelijah@outlook.com?subject=System Anomaly Report (404)&body=Path attempted: ${pathname}`;
               }}
               onMouseEnter={() => play("hover")}
             >

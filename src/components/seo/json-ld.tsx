@@ -4,24 +4,13 @@ export function JsonLd() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: "t7sen",
-    url: "https://t7sen.com",
-    jobTitle: "Software Architect",
-    image: "https://t7sen.com/Avatar.png",
-    sameAs: [
-      "https://github.com/t7sen",
-      "https://x.com/T7ME_",
-      "https://discord.com/users/170916597156937728",
-    ],
+    name: "Elijah Farrell",
+    jobTitle: "Software Developer",
+    image: "/Avatar.png",
+    sameAs: ["https://github.com", "https://linkedin.com"],
     description:
-      "Software Architect and Developer specializing in high-performance web applications and cyber security.",
-    knowsAbout: [
-      "Next.js",
-      "React",
-      "Cyber Security",
-      "TypeScript",
-      "Tailwind CSS",
-    ],
+      "Computer Science graduate focused on software development, data analysis, and IT.",
+    knowsAbout: ["Python", "Java", "C++", "React", "TypeScript", "IT Support"],
   };
 
   return (

@@ -13,13 +13,13 @@ If you discover a security vulnerability within this portfolio, please do not di
 
 ### Uplink Protocol
 
-1. **Direct Transmission:** Email the details to `contact@t7sen.com`.
+1. **Direct Transmission:** Email the details to the project maintainer (see repo contact / about).
 2. **Encryption:** If possible, use PGP keys (optional).
 3. **Response:** I will acknowledge the receipt of your vulnerability report within 48 hours and will send you regular updates on the remediation.
 
 ### Scope
 
-- **In Scope:** Any vulnerability that compromises the integrity, availability, or confidentiality of the `t7sen.com` infrastructure or user data (Guestbook/Redis).
+- **In Scope:** Any vulnerability that compromises the integrity, availability, or confidentiality of this portfolio or its deployment.
 - **Out of Scope:** Clickjacking on pages with no sensitive actions, physical attacks, or social engineering.
 
 **Status:** `MONITORING_ACTIVE`

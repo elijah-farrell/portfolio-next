@@ -7,7 +7,6 @@ import { useSfx } from "@/hooks/use-sfx";
 import { Button } from "@/components/ui/button";
 import { MagneticWrapper } from "@/components/ui/magnetic-wrapper";
 import { socialLinks } from "@/data/socials";
-import { useAchievements } from "@/hooks/use-achievements";
 
 gsap.registerPlugin(useGSAP);
 
@@ -18,7 +17,6 @@ interface SocialLinksProps {
 export function SocialLinks({ isFooter = false }: SocialLinksProps) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const { play } = useSfx();
-  const { unlock } = useAchievements();
 
   useGSAP(
     () => {
@@ -38,7 +36,6 @@ export function SocialLinks({ isFooter = false }: SocialLinksProps) {
 
   const handleSocialClick = () => {
     play("click");
-    unlock("SOCIAL_ENGINEER");
   };
 
   return (

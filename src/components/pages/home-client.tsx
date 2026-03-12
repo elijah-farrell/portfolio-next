@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { Shield, Fingerprint } from "lucide-react";
+import { BriefcaseBusiness, GraduationCap } from "lucide-react";
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 
 import { HeroSection } from "@/components/home/hero-section";
@@ -52,18 +52,18 @@ export function HomeClient() {
           aria-hidden="true"
         >
           <div className="decor-item absolute top-[20%] left-[10%] font-mono text-xs text-primary/60 opacity-0">
-            {`> INITIALIZING_CORE...`}
+            {`> LOADING_PORTFOLIO...`}
           </div>
           <div className="decor-item absolute top-[30%] right-[10%] font-mono text-xs text-muted-foreground/60 opacity-0">
-            {`{ "sys": "ready" }`}
+            {`{ "status": "open_to_work" }`}
           </div>
           <div className="decor-item absolute bottom-[20%] left-[5%] flex items-center gap-2 text-muted-foreground/60 opacity-0">
-            <Fingerprint className="h-4 w-4" />
-            <span className="font-mono text-xs">AUTH: VERIFIED</span>
+            <GraduationCap className="h-4 w-4" />
+            <span className="font-mono text-xs">EDUCATION: COMPLETE</span>
           </div>
           <div className="decor-item absolute bottom-[30%] right-[5%] flex items-center gap-2 text-primary/40 opacity-0">
-            <Shield className="h-4 w-4" />
-            <span className="font-mono text-xs">SEC_LEVEL: MAX</span>
+            <BriefcaseBusiness className="h-4 w-4" />
+            <span className="font-mono text-xs">NEXT_ROLE: READY</span>
           </div>
         </div>
         <HeroSection />

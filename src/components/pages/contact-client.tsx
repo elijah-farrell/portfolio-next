@@ -1,118 +1,74 @@
 "use client";
 
-import { useRef } from "react";
-import { Wifi, Terminal, Cpu } from "lucide-react";
-import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
-import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
-
-import { ContactForm } from "@/components/contact/contact-form";
-import { HackerText } from "@/components/ui/hacker-text";
+import { Mail, MapPin, Send } from "lucide-react";
 import { HudHeader } from "@/components/ui/hud-header";
-
-gsap.registerPlugin(useGSAP);
+import { portfolio } from "@/data/portfolio";
+import { Button } from "@/components/ui/button";
+import { socialLinks } from "@/data/socials";
 
 export function ContactClient() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const prefersReducedMotion = usePrefersReducedMotion();
-
-  useGSAP(
-    () => {
-      if (prefersReducedMotion) {
-        gsap.set(".floating-header", { y: 0, opacity: 1 });
-        gsap.set(".floating-content", { y: 0, opacity: 1 });
-        gsap.set(".decor-item", { y: 0 }); // Static position
-        return;
-      }
-
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-      tl.fromTo(
-        ".floating-header",
-        { y: -30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, stagger: 0.1, delay: 0.2 },
-      );
-
-      tl.fromTo(
-        ".floating-content",
-        { y: 40, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, stagger: 0.15 },
-        "-=0.6",
-      );
-      tl.fromTo(
-        ".decor-item",
-        { opacity: 0 },
-        { opacity: 1, duration: 1 },
-        "-=0.5",
-      );
-
-      if (!prefersReducedMotion) {
-        gsap.to(".decor-item", {
-          y: "20px",
-          duration: 3,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-          stagger: { amount: 2, from: "random" },
-        });
-      }
-    },
-    { scope: containerRef, dependencies: [prefersReducedMotion] },
-  );
-
   return (
-    <main
-      ref={containerRef}
-      className="relative flex min-h-dvh w-full flex-col items-center justify-start overflow-x-hidden text-foreground selection:bg-primary selection:text-primary-foreground"
-    >
-      {/* --- FLOATING HEADER (HUD) --- */}
+    <main className="relative flex min-h-dvh w-full flex-col items-center justify-start overflow-x-hidden text-foreground">
       <HudHeader
-        title="LINK_ACTIVE"
-        icon={Wifi}
+        title="CONTACT"
+        icon={Send}
         telemetry={
           <>
-            <span>PORT: 443</span>
+            <span>STATUS: OPEN</span>
             <span>::</span>
-            <span>SECURE</span>
+            <span>RESPONSIVE</span>
           </>
         }
         dotColor="bg-emerald-500"
       />
 
-      {/* --- CENTER STAGE --- */}
-      <div className="w-full max-w-4xl px-6 relative z-10 flex flex-col items-center pt-48 md:pt-0 md:justify-center md:min-h-dvh">
-        {/* Title Section */}
-        <div className="floating-content text-center mb-8 md:mb-16 space-y-2">
-          <div className="flex items-center justify-center gap-2 text-primary/60 mb-2 md:mb-4">
-            <Terminal className="h-4 w-4 md:h-5 md:w-5" />
-            <span className="font-mono text-xs md:text-sm tracking-[0.2em] uppercase">
-              Incoming Transmission
-            </span>
-          </div>
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter">
-            <HackerText text="Initialize Contact" />
+      <section className="relative z-10 w-full max-w-4xl px-6 pt-44 md:pt-36 pb-24">
+        <div className="rounded-xl border border-border/50 bg-background/40 p-8 backdrop-blur-sm text-center">
+          <h1 className="text-4xl md:text-6xl font-black tracking-tight">
+            Let&apos;s discuss how I can help your vision.
           </h1>
-        </div>
+          <p className="mt-4 text-muted-foreground">
+            Feel free to reach me at{" "}
+            <a
+              href={`mailto:${portfolio.email}`}
+              className="text-primary underline underline-offset-4"
+            >
+              {portfolio.email}
+            </a>
+          </p>
 
-        {/* The Floating Form */}
-        <div className="floating-content w-full max-w-xl pb-10 md:pb-0">
-          <ContactForm />
-        </div>
-      </div>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <Button asChild className="cursor-none">
+              <a href={`mailto:${portfolio.email}`}>
+                <Mail className="h-4 w-4" />
+                Email
+              </a>
+            </Button>
+            {socialLinks
+              .filter((item) => item.name !== "Email")
+              .map((item) => (
+                <Button
+                  key={item.name}
+                  variant="outline"
+                  asChild
+                  className="cursor-none"
+                >
+                  <a href={item.href} target="_blank" rel="noopener noreferrer">
+                    {item.name}
+                  </a>
+                </Button>
+              ))}
+          </div>
 
-      {/* --- AMBIENT DECOR --- */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden select-none opacity-20 hidden md:block">
-        <div className="decor-item absolute top-[20%] left-[10%] font-mono text-xs text-primary">
-          {`> ESTABLISHING HANDSHAKE...`}
+          <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-border/50 px-4 py-1 text-xs font-mono text-muted-foreground">
+            <MapPin className="h-3.5 w-3.5" />
+            {portfolio.location}
+          </div>
+          <p className="mt-8 text-xs text-muted-foreground">
+            © Developed by Me
+          </p>
         </div>
-        <div className="decor-item absolute top-[60%] right-[15%] font-mono text-xs text-muted-foreground">
-          {`{ "integrity": "verified" }`}
-        </div>
-        <div className="decor-item absolute bottom-[15%] left-[20%] flex items-center gap-2 text-muted-foreground">
-          <Cpu className="h-4 w-4" />
-          <span className="font-mono text-xs">PROCESSING...</span>
-        </div>
-      </div>
+      </section>
     </main>
   );
 }

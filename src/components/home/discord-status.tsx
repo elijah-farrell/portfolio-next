@@ -38,11 +38,11 @@ export function DiscordStatus() {
     );
   }
 
-  // Fallback data if timeout occurs or API fails
+  // Fallback data if timeout occurs or API fails (set your Discord ID in DISCORD_ID and username below)
   const displayData = data || {
     discord_user: {
       id: DISCORD_ID,
-      username: "t7sen",
+      username: "elijahfarrell",
       avatar: null,
     },
     discord_status: "offline",

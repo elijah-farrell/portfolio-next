@@ -3,73 +3,15 @@
 import * as React from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { DonationButton } from "@/components/home/donation-button";
-import { HackerText } from "@/components/ui/hacker-text";
-import { DiscordStatus } from "@/components/home/discord-status";
+import { ArrowDown, Download, Mail } from "lucide-react";
 import { useLoadingStatus } from "@/components/loading-context";
 import { NeuralNetwork } from "@/components/home/neural-network";
+import { Button } from "@/components/ui/button";
+import { TransitionLink } from "@/components/ui/transition-link";
+import { HackerText } from "@/components/ui/hacker-text";
+import { portfolio, quickStats } from "@/data/portfolio";
 
 gsap.registerPlugin(useGSAP);
-
-// --- ⚡ UPDATED: Typewriter (Layout Fixed) ---
-function Typewriter({
-  text,
-  startDelay = 0,
-}: {
-  text: string;
-  startDelay?: number;
-}) {
-  const [displayText, setDisplayText] = React.useState("");
-  const [showCursor, setShowCursor] = React.useState(true);
-  const [started, setStarted] = React.useState(false);
-
-  React.useEffect(() => {
-    const startTimeout = setTimeout(() => setStarted(true), startDelay * 1000);
-    return () => clearTimeout(startTimeout);
-  }, [startDelay]);
-
-  React.useEffect(() => {
-    if (!started) return;
-
-    let currentIndex = 0;
-    const interval = setInterval(() => {
-      if (currentIndex <= text.length) {
-        setDisplayText(text.slice(0, currentIndex));
-        currentIndex++;
-      } else {
-        clearInterval(interval);
-        setShowCursor(false);
-      }
-    }, 30);
-
-    return () => clearInterval(interval);
-  }, [text, started]);
-
-  return (
-    // Container uses relative positioning to hold the absolute overlay
-    <div className="relative inline-block w-full">
-      {/* LAYER 1: Space Reserver
-        - Contains full text immediately
-        - Invisible (opacity-0)
-        - Dictates the final height/width of the box so layout never jumps
-      */}
-      <div className="invisible opacity-0" aria-hidden="true">
-        {text}
-      </div>
-
-      {/* LAYER 2: Active Typing
-        - Positioned exactly over the invisible text
-        - Updates dynamically
-      */}
-      <div className="absolute top-0 left-0 right-0 bottom-0 text-center">
-        {displayText}
-        {showCursor && (
-          <span className="animate-pulse text-primary font-bold ml-0.5">_</span>
-        )}
-      </div>
-    </div>
-  );
-}
 
 export function HeroSection() {
   const containerRef = React.useRef<HTMLElement>(null);
@@ -119,28 +61,63 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 flex flex-col items-center space-y-8 text-center pointer-events-none">
-        <div className="hero-animate opacity-0 pointer-events-auto">
-          <DiscordStatus />
+        <div className="hero-animate opacity-0 pointer-events-auto rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 text-xs font-mono tracking-wider text-emerald-400">
+          <span className="mr-2">🟢</span>
+          {portfolio.availability}
         </div>
 
         <h1 className="hero-animate opacity-0 text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-8xl select-text pointer-events-auto">
-          Secure Code.
-          <br className="hidden sm:inline" />
+          {portfolio.name}
+          <br />
           <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-primary/60">
-            {" "}
-            <HackerText text="Elite Performance." />
+            <HackerText text={portfolio.title} />
           </span>
         </h1>
 
-        <div className="hero-animate opacity-0 mx-auto max-w-175 rounded-2xl bg-background/30 p-4 text-muted-foreground backdrop-blur-sm md:text-xl border border-white/5 pointer-events-auto">
-          <Typewriter
-            text="Cyber Security student and Frontend specialist. Whether optimizing code or conquering leaderboards in the top 0.1%, I deliver precision, security, and speed."
-            startDelay={2.5}
-          />
+        <div className="hero-animate opacity-0 mx-auto max-w-4xl rounded-2xl bg-background/30 p-4 text-muted-foreground backdrop-blur-sm md:text-xl border border-white/5 pointer-events-auto">
+          <p className="text-foreground/90">
+            {portfolio.heroLines.map((line) => (
+              <span key={line} className="mr-2 inline-block">
+                {line}
+              </span>
+            ))}
+          </p>
         </div>
 
-        <div className="hero-animate opacity-0 w-full flex justify-center pointer-events-auto">
-          <DonationButton />
+        <div className="hero-animate opacity-0 flex flex-wrap items-center justify-center gap-3 pointer-events-auto">
+          <Button asChild className="cursor-none gap-2">
+            <a href="#" aria-label="Download Resume">
+              <Download className="h-4 w-4" />
+              Download Resume
+            </a>
+          </Button>
+          <Button variant="outline" asChild className="cursor-none gap-2">
+            <TransitionLink href="/contact">
+              <Mail className="h-4 w-4" />
+              Get in touch
+            </TransitionLink>
+          </Button>
+        </div>
+
+        <div className="hero-animate opacity-0 flex items-center gap-2 text-muted-foreground">
+          <ArrowDown className="h-4 w-4" />
+          <span className="font-mono text-xs">Explore tabs below</span>
+        </div>
+
+        <div className="hero-animate opacity-0 grid w-full max-w-4xl grid-cols-2 gap-3 md:grid-cols-4 pointer-events-auto">
+          {quickStats.map((stat) => (
+            <div
+              key={stat.label}
+              className="rounded-xl border border-border/50 bg-background/40 p-4 backdrop-blur-sm"
+            >
+              <div className="text-2xl font-black tracking-tight">
+                {stat.value}
+              </div>
+              <div className="text-xs font-mono text-muted-foreground">
+                {stat.label}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

@@ -5,7 +5,7 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
-export const alt = "T7SEN | Software Architect";
+export const alt = "Elijah Farrell | Portfolio";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -83,7 +83,7 @@ export default async function Image() {
                 tw="w-full h-full object-cover"
               />
             ) : (
-              <div tw="text-green-500 text-6xl font-bold flex">T7</div>
+              <div tw="text-green-500 text-4xl font-bold flex">EF</div>
             )}
           </div>
 
@@ -95,10 +95,10 @@ export default async function Image() {
         <div tw="flex flex-col justify-center h-full">
           <div tw="flex items-center gap-3 mb-2">
             <div tw="px-2 py-1 bg-green-500 text-black text-xs font-bold tracking-widest flex">
-              SYS_ADMIN
+              AVAILABLE
             </div>
             <div tw="text-gray-500 text-xs font-mono tracking-widest flex">
-              // SAUDI_ARABIA
+              // NORTHERN_NEW_YORK
             </div>
           </div>
 
@@ -106,13 +106,13 @@ export default async function Image() {
             tw="text-9xl font-black text-white m-0 tracking-tighter leading-none flex"
             style={{ textShadow: "4px 4px 0px #22c55e" }}
           >
-            T7SEN
+            ELIJAH
           </h1>
 
           <div tw="h-1 w-24 bg-green-500 mt-6 mb-6 flex" />
 
           <p tw="text-3xl text-gray-300 font-bold tracking-tight flex m-0">
-            Software Architect
+            Software Developer
           </p>
 
           <div tw="flex gap-4 mt-2 text-gray-500 font-mono text-sm">
@@ -120,7 +120,7 @@ export default async function Image() {
             <span tw="flex">•</span>
             <span tw="flex">React</span>
             <span tw="flex">•</span>
-            <span tw="flex">CyberSec</span>
+            <span tw="flex">Computer Science</span>
           </div>
         </div>
       </div>
