@@ -54,6 +54,7 @@ export function NeuralNetwork() {
     let height = container.offsetHeight;
     let particles: Particle[] = [];
     let animationFrameId: number;
+    let resizeRafId: number | null = null;
 
     // Configuration
     const particleCount = 60;
@@ -69,6 +70,22 @@ export function NeuralNetwork() {
 
     // Mouse State
     const mouse = { x: -1000, y: -1000 };
+
+    function setCanvasSize() {
+      if (!container || !canvas || !ctx) return;
+      width = container.offsetWidth;
+      height = container.offsetHeight;
+
+      const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+
+      // Keep CSS pixels stable, scale backing store for sharpness.
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
 
     function init() {
       particles = [];
@@ -123,11 +140,18 @@ export function NeuralNetwork() {
     }
 
     const handleResize = () => {
-      width = container.offsetWidth;
-      height = container.offsetHeight;
-      canvas.width = width;
-      canvas.height = height;
-      init();
+      if (resizeRafId) cancelAnimationFrame(resizeRafId);
+      resizeRafId = requestAnimationFrame(() => {
+        setCanvasSize();
+
+        // Clamp existing particles into the new bounds (don't re-randomize).
+        particles.forEach((p) => {
+          p.x = Math.min(Math.max(p.x, 0), width);
+          p.y = Math.min(Math.max(p.y, 0), height);
+        });
+
+        resizeRafId = null;
+      });
     };
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -146,7 +170,8 @@ export function NeuralNetwork() {
     container.addEventListener("mousemove", handleMouseMove);
     container.addEventListener("mouseleave", handleMouseLeave);
 
-    handleResize(); // Initial setup
+    setCanvasSize(); // Initial setup
+    init();
     animate();
 
     return () => {
@@ -154,6 +179,7 @@ export function NeuralNetwork() {
       container.removeEventListener("mousemove", handleMouseMove);
       container.removeEventListener("mouseleave", handleMouseLeave);
       cancelAnimationFrame(animationFrameId);
+      if (resizeRafId) cancelAnimationFrame(resizeRafId);
     };
   }, [theme]); // Re-init on theme change
 
